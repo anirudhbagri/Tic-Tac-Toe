@@ -50,10 +50,10 @@ class gameBoard{
 	gameBoard(){
 		for(int i=0;i<3;i++)
 			for(int j=0;j<3;j++)
-				b[i][j]=0;	
-		//b[0][1]=2;				
+				b[i][j]=0;
+		//b[0][1]=2;
 		}
-		
+
 };
 int scCal(int game[3][3],int fill){
 	int count=0;
@@ -69,7 +69,7 @@ int scCal(int game[3][3],int fill){
 		for(int j=0;j<3;j++)
 			if(temp[i][j]==0)
 				temp[i][j]=fill;
-	//Rows Check	
+	//Rows Check
 	if( (temp[0][0]==fill || temp[0][1]==fill || temp[0][2]==fill) && (temp[0][0]!=opp && temp[0][1]!=opp && temp[0][2]!=opp) )
 		count++;
 	if( (temp[1][0]==fill || temp[1][1]==fill || temp[1][2]==fill) && (temp[1][0]!=opp && temp[1][1]!=opp && temp[1][2]!=opp))
@@ -84,13 +84,13 @@ int scCal(int game[3][3],int fill){
 		count++;
 	if( (temp[0][2]==fill || temp[1][2]==fill || temp[2][2]==fill) && (temp[0][2]!=opp && temp[1][2]!=opp && temp[2][2]!=opp))
 		count++;
-	
+
 	//Dias Check
 	if( (temp[0][0]==fill || temp[1][1]==fill || temp[2][2]==fill) && (temp[0][0]!=opp && temp[1][1]!=opp && temp[2][2]!=opp))
 		count++;
 	if( (temp[0][2]==fill || temp[1][1]==fill || temp[2][0]==fill) && (temp[0][2]!=opp && temp[1][1]!=opp && temp[2][0]!=opp))
 		count++;
-	
+
 	return count;
 }
 int score(int game[3][3]){
@@ -105,6 +105,17 @@ bool valid(int game[3][3],int x,int y){
 	cout<<"Invalid MOVE!!";
 	return false;
 }
+vector<pair<int, int> > get_available_moves(int game[3][3]) {
+    vector<pair<int, int> > available_moves;
+    for(int i = 0; i < 3; i++) {
+        for(int j = 0; j < 3; j++) {
+            if(game[i][j] == 0) {
+                available_moves.push_back(make_pair(i, j));
+            }
+        }
+    }
+    return available_moves;
+}
 int main(){
 	//int board[3][3] = {{0,0,0},{0,0,0},{0,0,0}};
 	//int board[3][3] = {{3,2,1},{5,1,6},{1,9,1}};
@@ -116,17 +127,42 @@ int main(){
 	//Blank    = 0(-)
 	 while(boardEmpty(board.b)){
 	 	//*********Players turn*********
+	 	cout << "Current Board Status\n\n" << endl;
 	 	dispalyBoard(board.b);
 	 	cout<<"\n\n\n";
 	 	do{
-	 		cout<<"Enter your move :-\n";	
+	 		vector<pair<int, int> > available_moves = get_available_moves(board.b);
+	 		cout<<"Enter your move : (available moves: ";
+	 		for(int i = 0; i < available_moves.size(); i++) {
+                if (i != 0) {
+                    cout << ", ";
+                }
+                cout << available_moves[i].first << " " << available_moves[i].second;
+                //printf("oay");
+	 		}
+	 		cout << ")" << endl;
 			cin>>x>>y;
 	 	}while(!valid(board.b,x,y));
 	 	player=true;
 		board.b[x][y]=1;
 	 	if(gameWon(board.b)&&player){
-			cout<<"Player won!!\n";
-			break;
+			dispalyBoard(board.b);
+			cout<<"\nPlayer won!!\n";
+			string play_again = "";
+			cout << "play_again?(Yes/No)" <<endl;
+			cin >> play_again;
+			if(play_again == "Yes" || play_again == "YES" || play_again == "yes") {
+                for(int i = 0; i < 3; i++) {
+                    for(int j = 0; j < 3; j++) {
+                        board.b[i][j] = 0;
+                    }
+                }
+                cout<<"\n\n\n";
+                continue;
+			}
+			else {
+                break;
+			}
 		}
 		player=false;
 		//********Computer's turn********
@@ -135,9 +171,9 @@ int main(){
 		int pairCount=0;
 		for(int i=0;i<3;i++){
 			for(int j=0;j<3;j++){
-				
+
 				if(board.b[i][j]==0){
-					
+
 					board.b[i][j]=2;
 					if(gameWon(board.b)){
 						p[pairCount++] = make_pair(make_pair(i,j),INT_MAX);
@@ -168,7 +204,7 @@ int main(){
 						p[pairCount++] = make_pair(make_pair(i,j),minScore);
 						//**********  MIN PLY ENDS     **********
 					}
-					//reseting 
+					//reseting
 					board.b[i][j]=0;
 				}
 			}
@@ -187,9 +223,23 @@ int main(){
 		board.b[bestMove.first][bestMove.second]=2;
 		//*****check if computer won*****
 		if(gameWon(board.b)&&!player){
-			cout<<"Computer won!!\n";
-			break;
+			dispalyBoard(board.b);
+			cout<<"\nComputer won!!\n";
+			string play_again = "";
+			cout << "play_again?(Yes/No)" <<endl;
+			cin >> play_again;
+			if(play_again == "Yes" || play_again == "YES" || play_again == "yes") {
+                for(int i = 0; i < 3; i++) {
+                    for(int j = 0; j < 3; j++) {
+                        board.b[i][j] = 0;
+                    }
+                }
+                cout<<"\n\n\n";
+                continue;
+			}
+			else {
+                break;
+			}
 		}
 	 }
-	dispalyBoard(board.b);
 }
