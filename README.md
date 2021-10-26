@@ -8,7 +8,7 @@ _This Tic Tac Toe program uses MIN-MAX technique to play._
 ---
 
 <div align="center">
-  <img src="./assets/image.gif" alt="Tic Tac Toe">
+  <img src="./assets/image.gif" alt="Tic Tac Toe Picture">
 </div>
 
 ------
